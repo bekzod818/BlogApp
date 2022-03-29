@@ -1,0 +1,2 @@
+# BlogApp
+Django framework
