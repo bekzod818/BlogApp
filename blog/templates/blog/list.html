@@ -15,7 +15,9 @@
             <!-- begin post -->
             <div class="card">
                 <a href="{{ post.get_absolute_url }}">
+                    {% if post.photo %}
                     <img class="img-fluid" src="{{ post.photo.url }}" alt="">
+                    {% endif %}
                 </a>
                 <div class="card-block">
                     <h2 class="card-title"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
@@ -37,8 +39,9 @@
             <!-- end post -->
             {% endfor %}
         </div>
-        </section>
+    </section>
         <!-- End List Posts
-        ================================================== -->    
+        ================================================== -->  
+    {% include 'blog/pagination.html' with page=posts %}
 </div>
 {% endblock %}

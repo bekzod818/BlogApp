@@ -63,11 +63,11 @@
 				<h1 class="posttitle">{{ post.title }}</h1>
 
 			</div>
-
+			{% if post.photo %}
 			<!-- Begin Featured Image -->
 			<img class="featured-image img-fluid" src="{{ post.photo.url }}" alt="">
 			<!-- End Featured Image -->
-
+			{% endif %}
 			<!-- Begin Post Content -->
 			<div class="article-post">
 				<p>{{ post.body }}</p>   
@@ -84,7 +84,8 @@
 				</ul>
 			</div>
 			<!-- End Tags -->
-
+			<a href="{% url 'editpost' post.id %}" class="btn btn-success">Edit</a>
+			<a href="{% url 'deletepost' post.id %}" class="btn btn-danger">Delete</a>
 		</div>
 		<!-- End Post -->
 

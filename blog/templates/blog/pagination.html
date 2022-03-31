@@ -1,0 +1,22 @@
+<div class="col-12">
+    {% if page.has_other_pages %}
+        <ul class="pagination justify-content-center">
+            {% if page.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page.previous_page_number }}">&laquo; Prev</a>
+                </li>
+            {% endif %}
+            {% for i in page.paginator.page_range %}
+                {% if page.number == i %}
+                    <li class="page-item active"><a class="page-link"><span>{{ i }}</span></a></li>
+                {% else %}
+                    <li class="page-item"><a href="?page={{ i }}" class="page-link">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if page.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page.next_page_number }}">Next &raquo;</a>
+                </li>
+            {% endif %}
+        </ul>
+    {% endif %}
+</div>
