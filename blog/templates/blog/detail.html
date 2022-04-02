@@ -84,8 +84,10 @@
 				</ul>
 			</div>
 			<!-- End Tags -->
+			{% if request.user == post.author %}
 			<a href="{% url 'editpost' post.id %}" class="btn btn-success">Edit</a>
 			<a href="{% url 'deletepost' post.id %}" class="btn btn-danger">Delete</a>
+			{% endif %}
 		</div>
 		<!-- End Post -->
 

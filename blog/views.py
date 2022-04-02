@@ -1,7 +1,12 @@
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q
 from .forms import AddPostForm
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
 
 
 def post_list(request):
@@ -22,12 +27,14 @@ def post_detail(request, year, month, day, post):
     return render(request, 'blog/detail.html', {'post': post})
 
 
+@login_required(login_url='login')
 def add_post(request):
     form = AddPostForm()
     if request.method == 'POST':
         # print(request.POST)
         form = AddPostForm(request.POST, request.FILES)
         if form.is_valid():
+            form.instance.author = request.user
             form.save()
             return redirect('post_list')
     else:
@@ -35,9 +42,13 @@ def add_post(request):
     return render(request, 'blog/addpost.html', {'form': form})
 
 
+@login_required(login_url='login')
 def edit_post(request, post_id):
     post = Post.objects.get(pk=post_id)
     form = AddPostForm(instance=post)
+
+    if request.user != post.author:
+        return HttpResponse("Siz buni o'zgartira olmaysiz")
 
     if request.method == "POST":
         form = AddPostForm(request.POST, request.FILES, instance=post)
@@ -47,7 +58,55 @@ def edit_post(request, post_id):
     return render(request, 'blog/editpost.html', {'form': form})
 
 
+@login_required(login_url='login')
 def delete_post(request, post_id):
     post = Post.objects.get(pk=post_id)
-    post.delete()
+    if request.user != post.author:
+        return HttpResponse("Siz buni o'chira olmaysiz")
+    else:
+        post.delete()
+        return redirect('post_list')
+
+
+def search_post(request):
+    query = request.GET.get('query')
+    posts = Post.objects.filter(
+        Q(title__icontains=query) | Q(body__icontains=query)
+    )
+    if posts:
+        return render(request, 'blog/search.html', {'posts': posts})
+    else:
+        return redirect('post_list')
+
+
+def registerUser(request):
+    if request.user.is_authenticated:
+        return redirect('post_list')
+    else:
+        form = UserCreationForm()
+        if request.method == 'POST':
+            form = UserCreationForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect('login')
+        return render(request, 'blog/register.html', {'form': form})  
+
+
+def loginUser(request):
+    if request.user.is_authenticated:
+        return redirect('post_list')
+    else:
+        if request.method == 'POST':
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(request, username=username, password=password)
+
+            if user is not None:
+                login(request, user)
+                return redirect('post_list')
+        return render(request, 'blog/login.html')
+
+
+def logoutUser(request):
+    logout(request)
     return redirect('post_list')
