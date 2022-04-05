@@ -1,9 +1,9 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Post
+from .models import Post, Category, Comment
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
-from .forms import AddPostForm
+from .forms import AddPostForm, CommentForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 
 def post_list(request):
     posts = Post.published.all()
+    cats = Category.objects.all()
     paginator = Paginator(posts, 3)
     page = request.GET.get('page')
     try:
@@ -19,12 +20,31 @@ def post_list(request):
         posts = paginator.page(1)
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
-    return render(request, 'blog/list.html', {'posts': posts})
+    return render(request, 'blog/list.html', {'posts': posts, 'cats': cats})
 
 
 def post_detail(request, year, month, day, post):
     post = get_object_or_404(Post, slug=post, status="published", publish__year=year, publish__month=month, publish__day=day)
-    return render(request, 'blog/detail.html', {'post': post})
+    form = CommentForm(request.POST)
+
+    if form.is_valid():
+        new_comment = form.save(commit=False)
+        new_comment.post = post
+        new_comment.author = request.user
+        new_comment.save()
+    else:
+        form = CommentForm()
+    
+    comments = Comment.objects.filter(post=post).order_by('-created')
+
+    return render(request, 'blog/detail.html', {'post': post, 'form': form, 'comments': comments})
+
+
+def category(request, slug):
+    posts = Post.objects.filter(category__slug=slug)
+    cat = Category.objects.get(slug=slug)
+    cats = Category.objects.all()
+    return render(request, 'blog/category.html', {'posts': posts, 'cat': cat, 'cats': cats})
 
 
 @login_required(login_url='login')

@@ -11,6 +11,7 @@
             <h1 class="text-center">Edit Post</h1>
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
+                {{ form.media }}
                 {{ form|crispy }}
                 <button type="submit" class="btn btn-primary">Edit Post</button>
             </form>

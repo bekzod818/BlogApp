@@ -63,6 +63,13 @@
 				<h1 class="posttitle">{{ post.title }}</h1>
 
 			</div>
+			<!-- Begin Tags -->
+			<div class="after-post-tags">
+				<ul class="tags">
+					<li><a href="{% url 'category' post.category.slug %}">{{ post.category }}</a></li>
+				</ul>
+			</div>
+			<!-- End Tags -->
 			{% if post.photo %}
 			<!-- Begin Featured Image -->
 			<img class="featured-image img-fluid" src="{{ post.photo.url }}" alt="">
@@ -70,23 +77,33 @@
 			{% endif %}
 			<!-- Begin Post Content -->
 			<div class="article-post">
-				<p>{{ post.body }}</p>   
+				<p>{{ post.body|safe }}</p>   
 			</div>
 			<!-- End Post Content -->
 
-			<!-- Begin Tags -->
-			<div class="after-post-tags">
-				<ul class="tags">
-					<li><a href="#">Design</a></li>
-					<li><a href="#">Growth Mindset</a></li>
-					<li><a href="#">Productivity</a></li>
-					<li><a href="#">Personal Growth</a></li>
-				</ul>
-			</div>
-			<!-- End Tags -->
 			{% if request.user == post.author %}
 			<a href="{% url 'editpost' post.id %}" class="btn btn-success">Edit</a>
 			<a href="{% url 'deletepost' post.id %}" class="btn btn-danger">Delete</a>
+			{% endif %}
+			<hr>
+			<h4>All comments</h4>
+			{% for comment in comments %}
+				<figure class="text-end">
+					<blockquote class="blockquote">
+						<p>{{ comment.body }}</p>
+					</blockquote>
+					<figcaption class="blockquote-footer">
+						Commented by <cite title="Source Title">@{{ comment.author }} </cite>
+					<b>{{ comment.created|timesince }} ago</b>
+					</figcaption>
+				</figure>
+			{% endfor %}
+			{% if request.user.is_authenticated %}
+			<form method="POST">
+				{% csrf_token %}
+				{{ form.as_p }}
+				<button type="submit" class="btn btn-primary">Send comment</button>
+			</form>
 			{% endif %}
 		</div>
 		<!-- End Post -->
