@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 
 def post_list(request):
     posts = Post.published.all()
-    cats = Category.objects.all()
+    # cats = Category.objects.all()
     paginator = Paginator(posts, 3)
     page = request.GET.get('page')
     try:
@@ -20,7 +20,7 @@ def post_list(request):
         posts = paginator.page(1)
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
-    return render(request, 'blog/list.html', {'posts': posts, 'cats': cats})
+    return render(request, 'blog/list.html', {'posts': posts})
 
 
 def post_detail(request, year, month, day, post):
@@ -43,8 +43,8 @@ def post_detail(request, year, month, day, post):
 def category(request, slug):
     posts = Post.objects.filter(category__slug=slug)
     cat = Category.objects.get(slug=slug)
-    cats = Category.objects.all()
-    return render(request, 'blog/category.html', {'posts': posts, 'cat': cat, 'cats': cats})
+    # cats = Category.objects.all()
+    return render(request, 'blog/category.html', {'posts': posts, 'cat': cat})
 
 
 @login_required(login_url='login')

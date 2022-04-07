@@ -1,4 +1,5 @@
 {% load static %}
+{% load cats_tag %}
 
 {% block extrahead %}
 <script>window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';</script>
@@ -46,6 +47,7 @@
 				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				  Categories
 				</a>
+				{% categories as cats %}
 				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 				  {% for cat in cats %}
 				  <a class="dropdown-item" href="{{ cat.get_absolute_url }}">{{ cat.name }}</a>
