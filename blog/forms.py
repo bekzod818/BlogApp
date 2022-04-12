@@ -1,5 +1,8 @@
+from attr import attrs
+from django import forms
 from django.forms import ModelForm, TextInput, Textarea, FileInput, Select
 from .models import Post, Comment
+from captcha.fields import CaptchaField
 
 
 
@@ -26,3 +29,10 @@ class CommentForm(ModelForm):
                     "placeholder": "Write your comment ...",
                 })
             }
+
+
+class ContactForm(forms.Form):
+    name = forms.CharField(label="Name", max_length=50)
+    email = forms.EmailField(label="Email")
+    content = forms.CharField(widget=forms.Textarea(attrs={'cols': 60, 'rows': 10}))
+    captcha = CaptchaField()

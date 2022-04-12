@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
 from .models import Post, Category, Comment
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
@@ -7,10 +8,13 @@ from .forms import AddPostForm, CommentForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
+from django.views.generic import FormView
+from .forms import ContactForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 def post_list(request):
-    posts = Post.published.all()
+    posts = Post.published.all().select_related('author')
     # cats = Category.objects.all()
     paginator = Paginator(posts, 3)
     page = request.GET.get('page')
@@ -130,3 +134,13 @@ def loginUser(request):
 def logoutUser(request):
     logout(request)
     return redirect('post_list')
+
+
+class ContactView(LoginRequiredMixin, FormView):
+    form_class = ContactForm
+    template_name = "blog/contact.html"
+    success_url = reverse_lazy('post_list')
+
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return redirect('post_list')

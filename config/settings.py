@@ -48,7 +48,11 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'crispy_forms',
-    'blog.apps.BlogConfig'
+    'blog.apps.BlogConfig',
+    # toolbar
+    "debug_toolbar",
+    # captcha
+    "captcha",
 ]
 
 MIDDLEWARE = [
@@ -59,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -165,3 +170,13 @@ CKEDITOR_CONFIGS = {
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_RESTRICT_BY_USER = True
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
+CAPTCHA_FONT_SIZE = 32
+
+CAPTCHA_LENGTH = 6
+
+# CAPTCHA_2X_IMAGE = False
