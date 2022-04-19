@@ -49,11 +49,19 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'crispy_forms',
     'blog.apps.BlogConfig',
+    'api.apps.ApiConfig',
     # toolbar
     "debug_toolbar",
     # captcha
     "captcha",
+    "rest_framework"
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+    'rest_framework.permissions.AllowAny',
+    ]
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
