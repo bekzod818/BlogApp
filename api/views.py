@@ -9,13 +9,13 @@ from .permissions import IsAuthorOrReadOnly
 class PostListAPI(ListAPIView):
     queryset = Post.published.all()
     serializer_class = PostSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly, )
+    permission_classes = (IsAuthenticated, )
 
 
 class PostCreateAPI(CreateAPIView):
     queryset = Post.published.all()
     serializer_class = PostSerializer
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAdminUser, ]
 
 
 class PostDetail(RetrieveUpdateDestroyAPIView):
