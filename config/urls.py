@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from .views import GoogleLogin
 
 urlpatterns = [
     path('ckeditor/', include('ckeditor_uploader.urls')),
@@ -13,6 +14,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('api/v1/dj-rest-auth/', include('dj_rest_auth.urls')),
     path('api/v1/dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
+    path('api/v1/dj-rest-auth/google/', GoogleLogin.as_view(), name='google_login'),
     path('accounts/', include('allauth.urls')),
 ]
 
