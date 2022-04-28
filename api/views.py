@@ -22,7 +22,7 @@ class PostViewSet(mixins.CreateModelMixin,
                     viewsets.GenericViewSet):
     queryset = Post.published.all()
     serializer_class = PostSerializer
-    permission_classes = (IsAuthorOrReadOnly, )
+    permission_classes = (IsAuthorOrReadOnly, IsAuthenticated)
     # pagination_class = StandartPagination
 
 
@@ -33,7 +33,7 @@ class UserViewSet(mixins.CreateModelMixin,
                     viewsets.GenericViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, IsAuthenticated)
     pagination_class = StandartPagination
 
 # class PostListAPI(ListAPIView):
