@@ -1,3 +1,4 @@
+from django.conf.urls import handler404
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
@@ -45,7 +46,7 @@ urlpatterns = [
     path('redoc/', schema_view.with_ui(
         'redoc', cache_timeout=0), name="schema-redoc")
 ]
-
+handler404 = "blog.views.page_not_found"
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL,
                           document_root=settings.STATIC_ROOT)

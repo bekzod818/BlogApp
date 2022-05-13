@@ -144,3 +144,7 @@ class ContactView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         print(form.cleaned_data)
         return redirect('post_list')
+
+
+def page_not_found(request, exception):
+    return render(request, 'blog/page404.html')
